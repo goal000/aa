@@ -1,44 +1,35 @@
-def sort(stk,cost,top):
-    for i in range(0,top):
-        for j in range(0,top):
-            if(cost[j]<cost[j+1]):
-                temp=cost[j]
-                cost[j]=cost[j+1]
-                cost[j+1]=temp
-                temp=stk[j]
-                stk[j]=stk[j+1]
-                stk[j+1]=temp
-print("Enter no of vertices : ")
-n=int(input())
-a=[]
-for i in range(0,n):
-    b=[0]*n
-    a.append(b)
-print("Enter no of edgs : ")
-edgs=int(input())
-print("Enter edges from src to dest with cost (src,dst,cost)")
-for i in range(0,edgs):
-    src,dest,cost=map(int,input().split(' '))
-    a[src][dest]=cost
-    a[dest][src]=cost
-print("Enter src and dest to search : ")
-src,dest=map(int,input().split(' '))
-vis=[0]*n
-stk=[0]*n
-cost=[0]*n
-top=0
-stk[top]=src
-vis[src]=1
-while(stk[top]!=dest):
-    ele=stk[top]
-    print(stk[top],end=" ")
-    top-=1
-    for i in range(0,n):
-        if(a[ele][i]>0 and vis[i]==0):
-            top+=1
-            stk[top]=i;
-            cost[top]=a[ele][i];
-            vis[i]=1
-    if(stk[top]!=ele):
-        sort(stk,cost,top)
-print(dest)
+from queue import PriorityQueue
+def best_first_search(v,l,goal,h):
+  open_list=PriorityQueue()
+  open_list.put((h[0],0))
+  flag=0
+  path=[]
+  while not(open_list.empty()) and flag==0:
+    t=open_list.get()
+    curr=t[1]
+    path.append(curr)
+    if(curr==goal):
+      flag=1
+      break
+    for i in range(v):
+      if l[curr][i]==1:
+        open_list.put((h[i],i))
+  if flag==1:
+   print('Goal Node is found .The Path is : ',path)
+  else :
+   print('Goal Node is not found')
+
+v=int(input('Enter the number of Nodes : '))
+l=[[0 for i in range(v)] for j in range(v)]
+edge=int(input('Enter no of edges : '))
+for i in range(edge):
+  print('Enter the start ,end of edge-',i+1)
+  start, end=[int(x) for x in input().split()]
+  l[start][end]=1
+h={}
+for i in range(v):
+  print('Enter h(n) for Node',i+1)
+  x=int(input())
+  h[i]=x
+goal=int(input('Enter the goal node :'))
+best_first_search(v,l,goal,h)
